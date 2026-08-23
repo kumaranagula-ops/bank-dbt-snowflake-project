@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "One row per customer. Grain: customer_id."
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+
+  - name: dim_branches
+    description: "One row per branch. Grain: branch_id."
+    columns:
+      - name: branch_id
+        tests: [unique, not_null]
+
+  - name: dim_accounts_scd2
+    description: >
+      Full history of savings accounts (SCD Type 2). A new row is added whenever
+      interest_rate or account_status changes. Filter is_current = true for the
+      latest state, or query as-of a date using valid_from/valid_to.
+    columns:
+      - name: account_id
+        tests: [not_null]
+      - name: valid_from
+        tests: [not_null]
+      - name: is_current
+        tests: [not_null]
+    tests:
+      # exactly one current row per account
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [account_id, valid_from]
+
+  - name: fct_transactions
+    description: >
+      Incremental fact table, one row per transaction. Grain: transaction_id.
+      Loaded via MERGE on transaction_id; each dbt run only processes rows
+      newer than the current max txn_date already in the table.
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: account_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_accounts')
+                field: account_id
+      - name: signed_amount
+        tests: [not_null]
+
+  - name: mart_account_monthly_summary
+    description: "One row per account per month: deposits, withdrawals, net change, ending balance."
+    columns:
+      - name: account_id
+        tests: [not_null]

@@ -1,0 +1,14 @@
+# Copy this to ~/.dbt/profiles.yml (do NOT commit real credentials to git)
+bank_savings:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: '<your_account_locator>'      # e.g. xy12345.ap-south-1
+      user: '<your_username>'
+      password: '{{ env_var("SNOWFLAKE_PASSWORD") }}'   # or use key-pair auth
+      role: BANK_DBT_ROLE
+      database: BANK_DB
+      warehouse: BANK_WH
+      schema: ANALYTICS
+      threads: 4

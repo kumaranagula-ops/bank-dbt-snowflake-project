@@ -1,0 +1,6 @@
+channel,channel_display_name,is_digital
+BRANCH,Branch Counter,false
+ATM,ATM,false
+ONLINE,Internet Banking,true
+UPI,UPI,true
+MOBILE_APP,Mobile App,true

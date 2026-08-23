@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_branches
+    description: "One row per bank branch."
+    columns:
+      - name: branch_id
+        tests: [unique, not_null]
+
+  - name: stg_customers
+    description: "Cleaned customer master (name casing, lowercase email, computed age)."
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+      - name: age
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 18
+                max_value: 100
+
+  - name: stg_accounts
+    description: "Current-state savings account master, one row per account."
+    columns:
+      - name: account_id
+        tests: [unique, not_null]
+      - name: interest_rate
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 15
+
+  - name: stg_transactions
+    description: "Cleaned transaction ledger with a sign-normalized amount (deposits +, withdrawals -)."
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: signed_amount
+        tests:
+          - not_null

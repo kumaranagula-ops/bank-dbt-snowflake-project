@@ -1,0 +1,31 @@
+name: 'bank_savings'
+version: '1.0.0'
+config-version: 2
+
+profile: 'bank_savings'  # matches profiles.yml target
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  # single place to control the "as of" date used in a few models
+  start_date: '2020-01-01'
+
+models:
+  bank_savings:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: ephemeral
+    marts:
+      +materialized: table
+      +schema: marts

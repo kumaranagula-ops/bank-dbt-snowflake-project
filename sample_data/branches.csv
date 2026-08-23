@@ -1,0 +1,9 @@
+branch_id,branch_name,city,state,ifsc_code,opened_date
+BR001,Mumbai Main Branch,Mumbai,MH,BANK0000001,2018-01-09
+BR002,Bangalore Main Branch,Bangalore,KA,BANK0000002,2011-11-18
+BR003,Hyderabad Main Branch,Hyderabad,TS,BANK0000003,2014-05-19
+BR004,Pune Main Branch,Pune,MH,BANK0000004,2013-11-11
+BR005,Chennai Main Branch,Chennai,TN,BANK0000005,2018-12-29
+BR006,Delhi Main Branch,Delhi,DL,BANK0000006,2018-05-25
+BR007,Kolkata Main Branch,Kolkata,WB,BANK0000007,2020-07-20
+BR008,Ahmedabad Main Branch,Ahmedabad,GJ,BANK0000008,2012-07-01
