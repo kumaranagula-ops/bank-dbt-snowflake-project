@@ -1,3 +1,5 @@
+-- Bank Savings Account project: Snowflake environment bootstrap with warehouse, database, schemas, and role grants
+-- Co-authored with CoCo
 -- ============================================================================
 -- 01_setup_database.sql
 -- Bank Savings Account project - Snowflake environment bootstrap
@@ -26,7 +28,8 @@ GRANT USAGE ON WAREHOUSE BANK_WH TO ROLE BANK_DBT_ROLE;
 GRANT ALL ON DATABASE BANK_DB TO ROLE BANK_DBT_ROLE;
 GRANT ALL ON SCHEMA BANK_DB.RAW TO ROLE BANK_DBT_ROLE;
 GRANT ALL ON SCHEMA BANK_DB.ANALYTICS TO ROLE BANK_DBT_ROLE;
-GRANT ALL ON ALL TABLES IN SCHEMA BANK_DB.RAW TO ROLE BANK_DBT_ROLE;
+GRANT ALL ON FUTURE TABLES IN SCHEMA BANK_DB.RAW TO ROLE BANK_DBT_ROLE;
+GRANT ALL ON FUTURE TABLES IN SCHEMA BANK_DB.ANALYTICS TO ROLE BANK_DBT_ROLE;
 
 -- Assign role to your user (replace <YOUR_USER>)
 -- GRANT ROLE BANK_DBT_ROLE TO USER <YOUR_USER>;
