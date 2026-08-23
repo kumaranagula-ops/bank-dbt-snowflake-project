@@ -6,21 +6,26 @@
 USE DATABASE BANK_DB;
 USE SCHEMA RAW;
 
+LIST @BANK_S3_STAGE;
 -- Static reference data
 COPY INTO RAW_BRANCHES
-  FROM @BANK_INTERNAL_STAGE/branches.csv
+  FROM @BANK_S3_STAGE/raw/branches.csv
   FILE_FORMAT = (FORMAT_NAME = CSV_STANDARD)
   ON_ERROR = 'ABORT_STATEMENT';
 
+  select * from raw_branches;
+
+ 
+
 COPY INTO RAW_CUSTOMERS
-  FROM @BANK_INTERNAL_STAGE/customers.csv
+  FROM @BANK_S3_STAGE/raw/customers.csv
   FILE_FORMAT = (FORMAT_NAME = CSV_STANDARD)
   ON_ERROR = 'ABORT_STATEMENT';
 
 -- Accounts: load DAY 1 file first -> this is the state the first dbt snapshot
 -- run will capture as the initial SCD2 record for every account.
 COPY INTO RAW_ACCOUNTS
-  FROM @BANK_INTERNAL_STAGE/accounts_day1.csv
+  FROM @BANK_S3_STAGE/raw/accounts_day1.csv
   FILE_FORMAT = (FORMAT_NAME = CSV_STANDARD)
   ON_ERROR = 'ABORT_STATEMENT';
 
@@ -36,7 +41,7 @@ COPY INTO RAW_ACCOUNTS
 
 -- Transactions batch 1 (initial/full load — 40,000 rows)
 COPY INTO RAW_TRANSACTIONS (transaction_id, account_id, txn_date, txn_type, amount, channel, created_at)
-  FROM @BANK_INTERNAL_STAGE/transactions_batch1.csv
+  FROM @BANK_S3_STAGE/raw/transactions_batch1.csv
   FILE_FORMAT = (FORMAT_NAME = CSV_STANDARD)
   ON_ERROR = 'ABORT_STATEMENT';
 
@@ -48,7 +53,7 @@ COPY INTO RAW_TRANSACTIONS (transaction_id, account_id, txn_date, txn_type, amou
 -- Transactions batch 2 (incremental/delta load — 10,000 new rows, later dates)
 -- This models a NEW file landing in S3 that your pipeline picks up next run.
 COPY INTO RAW_TRANSACTIONS (transaction_id, account_id, txn_date, txn_type, amount, channel, created_at)
-  FROM @BANK_INTERNAL_STAGE/transactions_batch2.csv
+  FROM @BANK_S3_STAGE/raw/transactions_batch2.csv
   FILE_FORMAT = (FORMAT_NAME = CSV_STANDARD)
   ON_ERROR = 'ABORT_STATEMENT';
 
